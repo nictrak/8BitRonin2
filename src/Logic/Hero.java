@@ -10,13 +10,31 @@ public class Hero extends LifeForm {
 	//Constructor
 	///basic hero
 	public Hero() {
-		super(new Vector2D(667,604),new Vector2D(0,0),new Vector2D(10,10),new Vector2D(32,64),new Vector2D(0,2),new GameImage(new Image(ClassLoader.getSystemResource("Hero1.png").toString())),3);
+		super(new Vector2D(653,578),new Vector2D(0,0),new Vector2D(60,90),new GameImage(new Image(ClassLoader.getSystemResource("Images/HeroTest.png").toString())),3);
+		this.getGameImage().updatePosition(this.getPosition());
 		this.feetStatus = FeetStatus.FLOOR;
 	}	
 	//Method
 	///Attack
 	///Jump
-	
+	public void jump() {
+		feetStatus = FeetStatus.AIR;
+		this.getVelocity().setY(0);
+		Vector2D jumpForce = new Vector2D(0,-20);
+		this.getPosition().add(jumpForce);
+		this.getVelocity().add(jumpForce);
+	}
+	///gravity update
+	public void gravityUpdate(Floor floor){
+		if(isCollide(floor)) {
+			this.getVelocity().setY(0);
+			feetStatus = FeetStatus.FLOOR;
+		}
+		if(feetStatus == FeetStatus.AIR) {
+			Vector2D gravityForce = new Vector2D(0,1);
+			this.getVelocity().add(gravityForce);
+		}
+	}
 	//getter and setter
 	public FeetStatus getFeetStatus() {
 		return feetStatus;

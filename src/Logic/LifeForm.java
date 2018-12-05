@@ -12,8 +12,8 @@ public class LifeForm extends Entity{
 		life = 1;
 	}
 	
-	public LifeForm(Vector2D pos,Vector2D vel,Vector2D maxVel,Vector2D size,Vector2D gravity,GameImage gameImage,int l) {
-		super(pos,vel,maxVel,size,gravity,gameImage);
+	public LifeForm(Vector2D pos,Vector2D vel,Vector2D size,GameImage gameImage,int l) {
+		super(pos,vel,size,gameImage);
 		if(l < 0) l = 1 ; 
 		isDeath = false;
 		life = l;
