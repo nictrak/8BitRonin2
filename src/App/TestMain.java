@@ -1,8 +1,16 @@
 package App;
 
+<<<<<<< HEAD
 import java.util.ArrayList;
 
 import Logic.*;
+=======
+import Logic.Floor;
+import Logic.Hero;
+import Logic.Vector2D;
+import Logic.Monster;
+import Logic.WingedGoblin;
+>>>>>>> origin/Phum
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -28,12 +36,21 @@ public class TestMain extends Application{
 		Floor floor = new Floor();
 		//make hero by classic constructor
 		Hero hero = new Hero();
+<<<<<<< HEAD
 		Platform p0 = new Platform(new Vector2D(500,500),true);
 		platforms.add(p0);
+=======
+		//make test monster
+		WingedGoblin monster = new WingedGoblin(hero);
+>>>>>>> origin/Phum
 		//set scene
 		root.getChildren().add(p0.getGameImage());
 		root.getChildren().add(hero.getGameImage());
+<<<<<<< HEAD
 		root.getChildren().add(floor.getGameImage());
+=======
+		root.getChildren().add(monster.getGameImage());
+>>>>>>> origin/Phum
         Scene scene = new Scene(root,1366,768);
         playStage.setTitle("TestScene");
         playStage.setScene(scene);
@@ -91,15 +108,23 @@ public class TestMain extends Application{
             		keyHandle.setAlreadyMoveDown(true);
             	}
             	hero.update();
+<<<<<<< HEAD
             	hero.gravityUpdate(floor,platforms);
             	for(Platform platform : platforms) {
             		platform.update();
             	}
+=======
+            	monster.direct();
+            	monster.update();
+            	hero.gravityUpdate(floor);
+            	
+>>>>>>> origin/Phum
             }
         }.start();
 	}
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		
 		launch(args);
 	}
 }

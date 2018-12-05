@@ -12,7 +12,7 @@ public class Hero extends LifeForm {
 	//Constructor
 	///basic hero
 	public Hero() {
-		super(new Vector2D(653,578),new Vector2D(0,0),new Vector2D(60,90),new GameImage(new Image(ClassLoader.getSystemResource("Images/HeroTest.png").toString())),3);
+		super(new Vector2D(653,578),new Vector2D(0,0),new Vector2D(60,90),new GameImage(new Image(ClassLoader.getSystemResource("Images/Picture1.png").toString())),3);
 		this.getGameImage().updatePosition(this.getPosition());
 		this.feetStatus = FeetStatus.FLOOR;
 	}	
