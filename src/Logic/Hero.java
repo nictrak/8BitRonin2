@@ -1,5 +1,7 @@
 package Logic;
 
+import java.util.ArrayList;
+
 import App.GameImage;
 import javafx.scene.image.Image;
 
@@ -16,6 +18,13 @@ public class Hero extends LifeForm {
 	}	
 	//Method
 	///Attack
+	///Down
+	public void down() {
+		if(feetStatus == FeetStatus.PLATFORM) {
+			this.getPosition().add(new Vector2D(0,20));
+			feetStatus = FeetStatus.AIR;
+		}
+	}
 	///Jump
 	public void jump() {
 		feetStatus = FeetStatus.AIR;
@@ -25,10 +34,25 @@ public class Hero extends LifeForm {
 		this.getVelocity().add(jumpForce);
 	}
 	///gravity update
-	public void gravityUpdate(Floor floor){
+	public void gravityUpdate(Floor floor,ArrayList<Platform> platforms){
 		if(isCollide(floor)) {
 			this.getVelocity().setY(0);
+			this.getPosition().setY(floor.getPosition().getY()-this.getSize().getY());
 			feetStatus = FeetStatus.FLOOR;
+		}
+		for(Platform platform : platforms) {
+			if(feetStatus == FeetStatus.AIR) {
+				if(isCollide(platform) && this.getPosition().getY()+this.getSize().getY()-30<platform.getPosition().getY()) {
+					this.getVelocity().setY(0);
+					this.getPosition().setY(platform.getPosition().getY()-this.getSize().getY());
+					feetStatus = FeetStatus.PLATFORM;
+				}
+			}
+			if(feetStatus == FeetStatus.PLATFORM) {
+				if(!isCollide(platform)) {
+					feetStatus = FeetStatus.AIR;
+				}else this.getPosition().add(platform.getVelocity());
+			}
 		}
 		if(feetStatus == FeetStatus.AIR) {
 			Vector2D gravityForce = new Vector2D(0,1);
