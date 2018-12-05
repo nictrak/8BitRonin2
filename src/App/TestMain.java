@@ -3,6 +3,8 @@ package App;
 import Logic.Floor;
 import Logic.Hero;
 import Logic.Vector2D;
+import Logic.Monster;
+import Logic.WingedGoblin;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -25,9 +27,12 @@ public class TestMain extends Application{
 		Floor floor = new Floor();
 		//make hero by classic constructor
 		Hero hero = new Hero();
+		//make test monster
+		WingedGoblin monster = new WingedGoblin(hero);
 		//set scene
 		root.getChildren().add(floor.getGameImage());
 		root.getChildren().add(hero.getGameImage());
+		root.getChildren().add(monster.getGameImage());
         Scene scene = new Scene(root,1366,768);
         playStage.setTitle("TestScene");
         playStage.setScene(scene);
@@ -74,6 +79,8 @@ public class TestMain extends Application{
             		keyHandle.setAlreadyJump(true);
             	}
             	hero.update();
+            	monster.direct();
+            	monster.update();
             	hero.gravityUpdate(floor);
             	
             }
@@ -81,6 +88,7 @@ public class TestMain extends Application{
 	}
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		
 		launch(args);
 	}
 }
