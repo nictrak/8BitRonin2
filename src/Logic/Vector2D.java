@@ -8,7 +8,12 @@ public class Vector2D {
 		this.x = x;
 		this.y = y;
 	}
-
+	
+	public void add(Vector2D other) {
+		this.x = x + other.getX();
+		this.y = y + other.getY();
+	}
+	//getter and setter
 	public double getX() {
 		return x;
 	}
