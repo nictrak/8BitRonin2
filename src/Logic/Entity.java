@@ -1,6 +1,7 @@
 package Logic;
 
 import App.GameImage;
+import javafx.scene.image.ImageView;
 
 public class Entity {
 	private Vector2D position;
@@ -32,6 +33,9 @@ public class Entity {
 	
 	public boolean isCollide(Entity other) {
 		return this.gameImage.getBoundsInParent().intersects(other.gameImage.getBoundsInParent());
+	}
+	public boolean isCollide(ImageView other) {
+		return this.gameImage.getBoundsInParent().intersects(other.getBoundsInParent());
 	}
 	
 	public Vector2D getPosition() {

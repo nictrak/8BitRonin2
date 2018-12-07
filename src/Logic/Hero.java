@@ -14,6 +14,9 @@ public class Hero extends LifeForm {
 	private boolean isMove;
 	private boolean isAttack;
 	private Sword sword;
+	private boolean isImmune;
+	private GameImage hitBox;
+	private int Score;
 	//Constructor
 	///basic hero
 	public Hero() {
@@ -24,8 +27,13 @@ public class Hero extends LifeForm {
 		this.isMove = false;
 		this.isAttack = false;
 		this.sword = new Sword(this);
-		Thread attackThread = new Thread(new AttackThread(this,300));
+		Thread attackThread = new Thread(new AttackThread(this,200));
 		attackThread.start();
+		this.hitBox = new GameImage(new Image(ClassLoader.getSystemResource("Images/HitBox.png").toString()));
+		this.hitBox.updatePosition(this.getPosition());
+		this.hitBox.setFitWidth(90);
+		this.hitBox.setFitHeight(150);
+		this.hitBox.setVisible(false);
 	}	
 	//Method
 	///move left
@@ -121,6 +129,20 @@ public class Hero extends LifeForm {
 			this.getVelocity().add(gravityForce);
 		}
 	}
+	///take damage
+	public void takeDamage() {
+		if(!this.isImmune()) {
+			Thread damagedThread = new Thread(new DamagedThread(this,2000,500));
+			damagedThread.start(); 
+		}
+	}
+	///update hitbox position
+	public void updateHitBox() {
+		if(this.hitBox != null) {
+			if(isRight) this.hitBox.updatePosition(this.getPosition());
+			else this.hitBox.updatePosition(this.getPosition().sum(new Vector2D(60,0)));
+		}
+	}
 	//getter and setter
 	public FeetStatus getFeetStatus() {
 		return feetStatus;
@@ -152,6 +174,22 @@ public class Hero extends LifeForm {
 	public void setSword(Sword sword) {
 		this.sword = sword;
 	}
-	
-	
+	public boolean isImmune() {
+		return isImmune;
+	}
+	public void setImmune(boolean isImmune) {
+		this.isImmune = isImmune;
+	}
+	public GameImage getHitBox() {
+		return hitBox;
+	}
+	public void setHitBox(GameImage hitBox) {
+		this.hitBox = hitBox;
+	}
+	public int getScore() {
+		return Score;
+	}
+	public void setScore(int score) {
+		Score = score;
+	}
 }	
