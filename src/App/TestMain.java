@@ -39,6 +39,7 @@ public class TestMain extends Application{
         KeyHandle keyHandle = new KeyHandle();
         //make monsters set
         new MonstersSet();
+        //attack thread
         scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
         	if(key.getCode() == KeyCode.D) {
         		keyHandle.setMoveRightPressed(true);
@@ -136,7 +137,7 @@ public class TestMain extends Application{
             		if(monster != null) {
             			monster.direct();
                 		monster.update();
-                		if(hero.isAttack()) {
+                		if(hero.isAttack() && !AttackThread.isWaited()) {
                 			if(monster.isCollide(hero.getSword())) {
                 				MonstersSet.getMonsters().remove(monster);
                 				root.getChildren().remove(monster.getGameImage());

@@ -24,6 +24,8 @@ public class Hero extends LifeForm {
 		this.isMove = false;
 		this.isAttack = false;
 		this.sword = new Sword(this);
+		Thread attackThread = new Thread(new AttackThread(this,300));
+		attackThread.start();
 	}	
 	//Method
 	///move left
@@ -60,8 +62,9 @@ public class Hero extends LifeForm {
 	}
 	///Attack
 	public void setAttack() {
-		Thread attackThread = new Thread(new AttackThread(this));
-		attackThread.start();
+		if(!isAttack) {
+			this.isAttack = true;
+		}
 	}
 	///Down
 	public void down() {
