@@ -13,6 +13,9 @@ public class Vector2D {
 		this.x = x + other.getX();
 		this.y = y + other.getY();
 	}
+	public Vector2D sum(Vector2D other) {
+		return new Vector2D(this.x + other.x,this.y + other.y);
+	}
 	//getter and setter
 	public double getX() {
 		return x;

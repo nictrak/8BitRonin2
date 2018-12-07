@@ -9,8 +9,9 @@ public class KeyHandle {
 	private boolean isMoveDownPressed;
 	private boolean isAlreadyMoveDown;
 	private boolean isAlreadyJump;
-	
-	
+	private boolean isAttackPressed;
+	private boolean isAlreadyAttack;
+	private boolean isAlreadyNotMove;
 	//getter setter
 	public boolean isJumpPressed() {
 		return isJumpPressed;
@@ -59,6 +60,24 @@ public class KeyHandle {
 	}
 	public void setAlreadyMoveDown(boolean isAlreadyMoveDown) {
 		this.isAlreadyMoveDown = isAlreadyMoveDown;
+	}
+	public boolean isAttackPressed() {
+		return isAttackPressed;
+	}
+	public void setAttackPressed(boolean isAttackPressed) {
+		this.isAttackPressed = isAttackPressed;
+	}
+	public boolean isAlreadyAttack() {
+		return isAlreadyAttack;
+	}
+	public void setAlreadyAttack(boolean isAlreadyAttack) {
+		this.isAlreadyAttack = isAlreadyAttack;
+	}
+	public boolean isAlreadyNotMove() {
+		return isAlreadyNotMove;
+	}
+	public void setAlreadyNotMove(boolean isAlreadyNotMove) {
+		this.isAlreadyNotMove = isAlreadyNotMove;
 	}
 	
 	

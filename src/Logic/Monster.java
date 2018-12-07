@@ -3,7 +3,7 @@ package Logic;
 import App.GameImage;
 import javafx.scene.image.Image;
 
-public class Monster extends LifeForm{
+public abstract class Monster extends LifeForm{
 	
 	private Hero target;
 	
@@ -12,7 +12,11 @@ public class Monster extends LifeForm{
 		target = h;
 		this.getGameImage().updatePosition(this.getPosition());
 	}
-	
+	public Monster(Vector2D pos,Hero h) {
+		super(pos,new Vector2D(0,0),new Vector2D(60,90),new GameImage(new Image(ClassLoader.getSystemResource("Images/Hero1.png").toString())),3);
+		target = h;
+		this.getGameImage().updatePosition(this.getPosition());
+	}
 	public Monster(Vector2D pos,Vector2D vel,Vector2D size,GameImage gameImage,int l,Hero h) {
 		super(pos,vel,size,gameImage,l);
 		target = h;
@@ -26,6 +30,8 @@ public class Monster extends LifeForm{
 		return rad;
 		
 	}
+	
+	public abstract Vector2D direct();
 	
 
 }
