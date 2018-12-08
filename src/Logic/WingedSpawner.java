@@ -27,21 +27,21 @@ public class WingedSpawner {
 		public void run() {
 			// TODO Auto-generated method stub
 			while(true) {
-				double randomPos = Math.random() * 667 + 1;
-				int randomSide = (int)(Math.random() * 2 + 1);
-				spawnPos = new Vector2D(0,randomPos);
-				if(randomSide == 1) {
-					spawnPos.setX(-10);
-				}else {
-					spawnPos.setX(1376);
-				}
-				isSpawn = true;
 				try {
 					Thread.sleep((long) spawnRate);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				double randomPos = Math.random() * 627 + 1;
+				int randomSide = (int)(Math.random() * 2 + 1);
+				spawnPos = new Vector2D(0,randomPos);
+				if(randomSide == 1) {
+					spawnPos.setX(-10);
+				}else {
+					spawnPos.setX(1200);
+				}
+				isSpawn = true;
 			}
 		}
 	}

@@ -6,6 +6,7 @@ public class LifeForm extends Entity{
 	
 	private int life;
 	private boolean isDeath;
+	protected boolean isRight;
 	
 	public LifeForm() {
 		super();
@@ -42,6 +43,14 @@ public class LifeForm extends Entity{
 
 	public void setDeath(boolean isDeath) {
 		this.isDeath = isDeath;
+	}
+
+	public boolean isRight() {
+		return isRight;
+	}
+
+	public void setRight(boolean isRight) {
+		this.isRight = isRight;
 	}
 	
 	

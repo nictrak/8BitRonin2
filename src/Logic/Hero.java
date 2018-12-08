@@ -10,7 +10,6 @@ public class Hero extends LifeForm {
 	
 	//Attributes 
 	private FeetStatus feetStatus;
-	private boolean isRight;
 	private boolean isMove;
 	private boolean isAttack;
 	private Sword sword;
@@ -34,6 +33,7 @@ public class Hero extends LifeForm {
 		this.hitBox.setFitWidth(90);
 		this.hitBox.setFitHeight(150);
 		this.hitBox.setVisible(false);
+		new Thread(new DamagedThread(this,2000,500));
 	}	
 	//Method
 	///move left
@@ -149,12 +149,6 @@ public class Hero extends LifeForm {
 	}
 	public void setFeetStatus(FeetStatus feetStatus) {
 		this.feetStatus = feetStatus;
-	}
-	public boolean isRight() {
-		return isRight;
-	}
-	public void setRight(boolean isRight) {
-		this.isRight = isRight;
 	}
 	public boolean isMove() {
 		return isMove;

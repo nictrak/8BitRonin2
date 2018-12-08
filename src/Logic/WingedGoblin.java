@@ -7,7 +7,9 @@ public class WingedGoblin extends Monster{
 	
 	public WingedGoblin(Hero h) {
 		super(h);
-		this.setGameImage(new GameImage(new Image(ClassLoader.getSystemResource("Images/melee wing.png").toString())));
+		this.setLeftSide("Images/melee wing left.gif");
+		this.setRightSide("Images/melee wing right.gif");
+		this.setGameImage(new GameImage(new Image(ClassLoader.getSystemResource(this.getLeftSide()).toString())));
 		this.updateImage();
 		this.getHitBox().updatePosition(this.getPosition());
 		this.getHitBox().setFitWidth(70);
@@ -16,7 +18,9 @@ public class WingedGoblin extends Monster{
 	}
 	public WingedGoblin(Vector2D pos,Hero h) {
 		super(pos,h);
-		this.setGameImage(new GameImage(new Image(ClassLoader.getSystemResource("Images/melee wing.png").toString())));
+		this.setLeftSide("Images/melee wing left.gif");
+		this.setRightSide("Images/melee wing right.gif");
+		this.setGameImage(new GameImage(new Image(ClassLoader.getSystemResource(this.getLeftSide()).toString())));
 		this.updateImage();
 		this.getHitBox().updatePosition(this.getPosition());
 		this.getHitBox().setFitWidth(70);
@@ -27,9 +31,11 @@ public class WingedGoblin extends Monster{
 	@Override
 	public Vector2D direct() {
 		double a = findHero();
-		
-		Vector2D j = new Vector2D(Math.cos(a)*2.5,Math.sin(a)*2.5);
+		Vector2D j = new Vector2D(Math.cos(a)*1,Math.sin(a)*1);
 		this.getPosition().add(j);
+		if(j.getX() >= 0) this.isRight = true;
+		else this.isRight = false;
+		this.updateSide();
 		this.getHitBox().updatePosition(this.getPosition().sum(new Vector2D(50,10)));
 		return j;
 	}

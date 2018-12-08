@@ -19,6 +19,12 @@ public class WalkerSpawner {
 		public void run() {
 			// TODO Auto-generated method stub
 			while(true) {
+				try {
+					Thread.sleep((long) spawnRate);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				int randomSide = (int)(Math.random() * 2 + 1);
 				spawnPos = new Vector2D(0,588);
 				if(randomSide == 1) {
@@ -27,12 +33,6 @@ public class WalkerSpawner {
 					spawnPos.setX(1376);
 				}
 				isSpawn = true;
-				try {
-					Thread.sleep((long) spawnRate);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 			}
 		}
 	}
