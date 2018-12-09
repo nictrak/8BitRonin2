@@ -11,14 +11,14 @@ public class AttackThread implements Runnable{
 	public AttackThread(Hero hero,double attackRate) {
 		this.hero = hero;
 		this.attackRate = attackRate;
-		this.waited = false;
+		waited = false;
 	}
 	
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
 		while(true) {
-			this.waited = false;
+			waited = false;
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e) {
@@ -26,24 +26,14 @@ public class AttackThread implements Runnable{
 				e.printStackTrace();
 			}
 			if(hero.isAttack()) {
-				if(hero.isRight()) hero.getGameImage().setImage(new Image(ClassLoader.getSystemResource("Images/attack right2.0.gif").toString()));
-				else hero.getGameImage().setImage(new Image(ClassLoader.getSystemResource("Images/attack left2.0.gif").toString()));
-				
 				try {
 					Thread.sleep(250);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				if(hero.isMove()) {
-					if(hero.isRight()) hero.setRight();
-					else hero.setLeft();
-				}else {
-					if(hero.isRight()) hero.getGameImage().setImage(new Image(ClassLoader.getSystemResource("Images/stand right.png").toString()));
-					else hero.getGameImage().setImage(new Image(ClassLoader.getSystemResource("Images/stand left.png").toString()));
-				}
 				hero.setAttack(false);
-				this.waited = true;
+				waited = true;
 				try {
 					Thread.sleep((long) attackRate);
 				} catch (InterruptedException e) {

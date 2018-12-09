@@ -5,9 +5,6 @@ import javafx.scene.image.Image;
 
 public class Mage extends Monster{
 	
-	private Thread castThread;
-	private boolean castable;
-	
 	public Mage(Hero h) {
 		super(h);
 		this.setGameImage(new GameImage(new Image(ClassLoader.getSystemResource("Images/wing mage cast.png").toString())));
@@ -16,7 +13,7 @@ public class Mage extends Monster{
 		this.getHitBox().setFitWidth(70);
 		this.getHitBox().setFitHeight(70);
 		this.getHitBox().setVisible(false);
-		castThread = new Thread(new CastThread(this));
+		Thread castThread = new Thread(new CastThread(this));
 		castThread.start();
 	}
 	public Mage(Vector2D pos,Hero h) {
@@ -27,7 +24,7 @@ public class Mage extends Monster{
 		this.getHitBox().setFitWidth(70);
 		this.getHitBox().setFitHeight(70);
 		this.getHitBox().setVisible(false);
-		castThread = new Thread(new CastThread(this));
+		Thread castThread = new Thread(new CastThread(this));
 		castThread.start();
 	}
 	

@@ -1,7 +1,6 @@
 package Logic;
 
 import java.util.ArrayList;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import App.GameImage;
 import javafx.scene.image.Image;
@@ -16,6 +15,10 @@ public class Hero extends LifeForm {
 	private boolean isImmune;
 	private GameImage hitBox;
 	private int Score;
+	private ImageStatus imageStatus;
+	private ImageStatus nowStatus;
+	private int jumpLimit;
+	private int jumpCount;
 	//Constructor
 	///basic hero
 	public Hero() {
@@ -34,11 +37,63 @@ public class Hero extends LifeForm {
 		this.hitBox.setFitHeight(150);
 		this.hitBox.setVisible(false);
 		new Thread(new DamagedThread(this,2000,500));
+		imageStatus = ImageStatus.STANDRIGHT;
+		nowStatus = ImageStatus.STANDRIGHT;
+		this.jumpCount = 0;
+		this.jumpLimit = 2;
 	}	
 	//Method
-	///move left
-	public void setLeft() {
-		this.getGameImage().setImage(new Image(ClassLoader.getSystemResource("Images/run left f2.gif").toString()));
+	///update image status
+	public void updateImageStatus() {
+		if(isAttack) {
+			if(isRight) this.imageStatus = ImageStatus.ATTACKRIGHT;
+			else this.imageStatus = ImageStatus.ATTACKLEFT;
+		}else if(isMove) {
+			if(feetStatus == FeetStatus.AIR) {
+				if(isRight) this.imageStatus = ImageStatus.AIRRIGHT;
+				else this.imageStatus = ImageStatus.AIRLEFT;
+			}else {
+				if(isRight) this.imageStatus = ImageStatus.MOVERIGHT;
+				else this.imageStatus = ImageStatus.MOVELEFT;
+			}
+		}else {
+			if(isRight) this.imageStatus = ImageStatus.STANDRIGHT;
+			else this.imageStatus = ImageStatus.STANDLEFT;
+		}
+		if(!imageStatus.equals(nowStatus)) {
+			if(imageStatus == ImageStatus.STANDRIGHT) {
+				this.getGameImage().setImage(new Image(ClassLoader.getSystemResource("Images/stand right.png").toString()));
+				this.nowStatus = ImageStatus.STANDRIGHT;
+			}
+			if(imageStatus == ImageStatus.STANDLEFT) {
+				this.getGameImage().setImage(new Image(ClassLoader.getSystemResource("Images/stand left.png").toString()));
+				this.nowStatus = ImageStatus.STANDLEFT;
+			}
+			if(imageStatus == ImageStatus.MOVELEFT) {
+				this.getGameImage().setImage(new Image(ClassLoader.getSystemResource("Images/run left f2.gif").toString()));
+				this.nowStatus = ImageStatus.MOVELEFT;
+			}
+			if(imageStatus == ImageStatus.MOVERIGHT) {
+				this.getGameImage().setImage(new Image(ClassLoader.getSystemResource("Images/run right f2.gif").toString()));
+				this.nowStatus = ImageStatus.MOVERIGHT;
+			}
+			if(imageStatus == ImageStatus.ATTACKLEFT) {
+				this.getGameImage().setImage(new Image(ClassLoader.getSystemResource("Images/attack left2.0.gif").toString()));
+				this.nowStatus = ImageStatus.ATTACKLEFT;
+			}
+			if(imageStatus == ImageStatus.ATTACKRIGHT) {
+				this.getGameImage().setImage(new Image(ClassLoader.getSystemResource("Images/attack right2.0.gif").toString()));
+				this.nowStatus = ImageStatus.ATTACKRIGHT;
+			}
+			if(imageStatus == ImageStatus.AIRLEFT) {
+				this.getGameImage().setImage(new Image(ClassLoader.getSystemResource("Images/run left 2.png").toString()));
+				this.nowStatus = ImageStatus.AIRLEFT;
+			}
+			if(imageStatus == ImageStatus.AIRRIGHT) {
+				this.getGameImage().setImage(new Image(ClassLoader.getSystemResource("Images/run right 2.png").toString()));
+				this.nowStatus = ImageStatus.AIRRIGHT;
+			}
+		}
 	}
 	public void moveLeft() {
 		this.getPosition().add(new Vector2D(-10,0));
@@ -50,79 +105,57 @@ public class Hero extends LifeForm {
 		this.isRight = true;
 		this.isMove = true;
 	}
-	public void setRight() {
-		this.getGameImage().setImage(new Image(ClassLoader.getSystemResource("Images/run right f2.gif").toString()));
-	}
-	public void setJump() {
-		if(!isAttack) {
-			if(isMove) {
-				if(isRight) this.getGameImage().setImage(new Image(ClassLoader.getSystemResource("Images/run right 2.png").toString()));
-				else this.getGameImage().setImage(new Image(ClassLoader.getSystemResource("Images/run left 2.png").toString()));
-			}
-		}
-	}
 	public void notMove() {
-		if(!isAttack) {
-			if(isRight) this.getGameImage().setImage(new Image(ClassLoader.getSystemResource("Images/stand right.png").toString()));
-			else this.getGameImage().setImage(new Image(ClassLoader.getSystemResource("Images/stand left.png").toString()));
-			isMove = false;
-		}
+		isMove = false;
 	}
-	///Attack
 	public void setAttack() {
 		if(!isAttack) {
 			this.isAttack = true;
 		}
 	}
-	///Down
-	public void down() {
-		if(feetStatus == FeetStatus.PLATFORM) {
-			this.getPosition().add(new Vector2D(0,20));
-			feetStatus = FeetStatus.AIR;
-		}
-	}
 	///Jump
 	public void jump() {
-		feetStatus = FeetStatus.AIR;
-		this.getVelocity().setY(0);
-		Vector2D jumpForce = new Vector2D(0,-20);
-		this.getPosition().add(jumpForce);
-		this.getVelocity().add(jumpForce);
-		this.setJump();
+		if(this.jumpCount <= this.jumpLimit) {
+			feetStatus = FeetStatus.AIR;
+			this.getVelocity().setY(0);
+			Vector2D jumpForce = new Vector2D(0,-20);
+			this.getPosition().add(jumpForce);
+			this.getVelocity().add(jumpForce);
+			this.jumpCount = this.jumpCount + 1;
+		}
 	}
 	///gravity update
 	public void gravityUpdate(Floor floor,ArrayList<Plat> platforms){
 		if(isCollide(floor) && feetStatus == FeetStatus.AIR ) {
 			this.getVelocity().setY(0);
-			this.getPosition().setY(floor.getPosition().getY()-this.getSize().getY());
+			this.getPosition().setY(floor.getPosition().getY() - this.getSize().getY() + 1);
 			this.updateImage();
 			feetStatus = FeetStatus.FLOOR;
-				if(isMove) {
-					if(isRight) this.getGameImage().setImage(new Image(ClassLoader.getSystemResource("Images/run right f2.gif").toString()));
-					else this.getGameImage().setImage(new Image(ClassLoader.getSystemResource("Images/run left f2.gif").toString()));
-				}
-				else {
-					if(isRight) this.getGameImage().setImage(new Image(ClassLoader.getSystemResource("Images/stand right.png").toString()));
-					else this.getGameImage().setImage(new Image(ClassLoader.getSystemResource("Images/stand left.png").toString()));
-				}
-				this.updateImage();
+			this.updateImage();
+			this.jumpCount = 0;
 		}
+		boolean isOnPlat = false;
 		for(int i = 0 ; i < platforms.size() ; i++) {
 			Plat platform = platforms.get(i);
 			if(!platform.equals(null)) {
 				if(feetStatus == FeetStatus.AIR) {
 					if(isCollide(platform) && this.getPosition().getY()+this.getSize().getY()-30<platform.getPosition().getY()) {
 						this.getVelocity().setY(0);
-						this.getPosition().setY(platform.getPosition().getY()-this.getSize().getY());
+						this.getPosition().setY(platform.getPosition().getY() - this.getSize().getY() + 1);
 						feetStatus = FeetStatus.PLATFORM;
+						isOnPlat = true;
+						this.jumpCount = 0;
 					}
 				}
 				if(feetStatus == FeetStatus.PLATFORM) {
-					if(!isCollide(platform) ) {
-						feetStatus = FeetStatus.AIR;
-					}else if(this.getPosition().getY()+this.getSize().getY()-30<platform.getPosition().getY())this.getPosition().add(platform.getVelocity());
+					if(isCollide(platform) && this.getPosition().getY()+this.getSize().getY()-30<platform.getPosition().getY()) {
+						this.getPosition().add(platform.getVelocity());
+					}
 				}
 			}
+		}
+		if(!isOnPlat && !isCollide(floor)) {
+			feetStatus = FeetStatus.AIR;
 		}
 		if(feetStatus == FeetStatus.AIR) {
 			Vector2D gravityForce = new Vector2D(0,1.5);
@@ -142,6 +175,11 @@ public class Hero extends LifeForm {
 			if(isRight) this.hitBox.updatePosition(this.getPosition());
 			else this.hitBox.updatePosition(this.getPosition().sum(new Vector2D(60,0)));
 		}
+	}
+	//move limit
+	public void moveLimit() {
+		if(this.getPosition().getX() < 0) this.getPosition().setX(0);
+		if(this.getPosition().getX() > 1366 - this.getSize().getX()) this.getPosition().setX(1366 - this.getSize().getX());
 	}
 	//getter and setter
 	public FeetStatus getFeetStatus() {
@@ -186,4 +224,17 @@ public class Hero extends LifeForm {
 	public void setScore(int score) {
 		Score = score;
 	}
+	public ImageStatus getImageStatus() {
+		return imageStatus;
+	}
+	public void setImageStatus(ImageStatus imageStatus) {
+		this.imageStatus = imageStatus;
+	}
+	public ImageStatus getNowStatus() {
+		return nowStatus;
+	}
+	public void setNowStatus(ImageStatus nowStatus) {
+		this.nowStatus = nowStatus;
+	}
+	
 }	

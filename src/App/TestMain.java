@@ -12,6 +12,8 @@ import javafx.application.Application;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -25,8 +27,24 @@ import javafx.util.Duration;
 
 public class TestMain extends Application{
 
-	private boolean isEnd;
-	
+	private static boolean isEnd;
+	private int stageNumber ;
+	private Scene scene;
+	private Scene menuScene;
+	private Floor floor;
+	private Hero hero;
+	private HealthBar healthBar;
+	private GameImage death;
+	private ScoreBoard scoreBoard;
+	private MediaPlayer youDiePlayer ;
+	private MediaPlayer killPlayer;
+	private MediaPlayer swordPlayer ;
+	private MediaPlayer backSongs;
+	private KeyHandle keyHandle;
+	SpawnerThread wingedSpawner;
+    SpawnerThread mageSpawner;
+    SpawnerThread walkerSpawner;
+    SpawnerThread platSpawner ;
 	
 	public TestMain() {
 		// TODO Auto-generated constructor stub
@@ -34,14 +52,15 @@ public class TestMain extends Application{
 	@Override
 	public void start(Stage playStage) throws Exception {
 		// TODO Auto-generated method stub
-		int stageNumber = 1 ;
+		stageNumber = 0 ;
 		//Menu Scene
 		Pane menu = new Pane();
 		GameImage goblinSouls = new GameImage(new Image(ClassLoader.getSystemResource("Images/goblin soul y.png").toString()));
-		ImageView startButton = new GameImage(new Image(ClassLoader.getSystemResource("Images/start1.png").toString()));
+		GameImage startButton = new GameImage(new Image(ClassLoader.getSystemResource("Images/start1.png").toString()));
 		GameImage quitButton = new GameImage(new Image(ClassLoader.getSystemResource("Images/quit1.png").toString()));
+		GameImage backGround = new GameImage(new Image(ClassLoader.getSystemResource("Backgrounds/bg.png").toString()));
+		backGround.updatePosition(new Vector2D(0,0));
 		goblinSouls.updatePosition(new Vector2D(0,200));
-		//startButton.updatePosition(new Vector2D(580,485));
 		quitButton.updatePosition(new Vector2D(610,570));
 		goblinSouls.setFitHeight(150);
 		goblinSouls.setFitWidth(1350);
@@ -49,31 +68,41 @@ public class TestMain extends Application{
 		startButton.setFitWidth(200);
 		quitButton.setFitHeight(40);
 		quitButton.setFitWidth(140);
+		startButton.setLayoutX(580);
+		startButton.setLayoutY(485);
+		menu.getChildren().add(backGround);
 		menu.getChildren().add(goblinSouls);
 		menu.getChildren().add(startButton);
 		menu.getChildren().add(quitButton);
-		Scene menuScene = new Scene(menu,1366,768);
+		quitButton.setOnMouseEntered(e -> quitButton.setImage(new Image(ClassLoader.getSystemResource("Images/quit2.png").toString())));
+		quitButton.setOnMouseExited(e -> quitButton.setImage(new Image(ClassLoader.getSystemResource("Images/quit1.png").toString())));
+		startButton.setOnMouseEntered(e -> startButton.setImage(new Image(ClassLoader.getSystemResource("Images/start2.png").toString())));
+		startButton.setOnMouseExited(e -> startButton.setImage(new Image(ClassLoader.getSystemResource("Images/start1.png").toString())));
+		menuScene = new Scene(menu,1366,768);
         menuScene.setFill(Color.BLACK);
 		//
 		ArrayList<Plat> plats = new ArrayList<Plat>();
 		ArrayList<FireBall> fireBalls = new ArrayList<FireBall>();
 		new CastThread(null).setup();
 		isEnd = false;
+		//media setup
+		youDiePlayer = new MediaPlayer(new Media(ClassLoader.getSystemResource("Sounds/you die.mp3").toString()));
+		killPlayer = new MediaPlayer(new Media(ClassLoader.getSystemResource("Sounds/goblin die.mp3").toString()));
+		swordPlayer = new MediaPlayer(new Media(ClassLoader.getSystemResource("Sounds/sword.mp3").toString()));
+		backSongs = new MediaPlayer(new Media(ClassLoader.getSystemResource("Sounds/soul of cinder.mp3").toString()));
+		backSongs.setVolume(0.1);
 		//make pane
 		Pane root = new Pane();
-		//make floor
-		Floor floor = new Floor();
-		//make hero by classic constructor
-		Hero hero = new Hero();
-		//make health bar
-		HealthBar healthBar = new HealthBar(hero);
-		GameImage death = new GameImage(new Image(ClassLoader.getSystemResource("Images/you died 2.png").toString()));
+		floor = new Floor();
+		hero = new Hero();
+		healthBar = new HealthBar(hero);
+		death = new GameImage(new Image(ClassLoader.getSystemResource("Images/you died 2.png").toString()));
 		death.updatePosition(new Vector2D(0,200));
-		MediaPlayer youDiePlayer = new MediaPlayer(new Media(ClassLoader.getSystemResource("Sounds/you die.mp3").toString()));
-		MediaPlayer killPlayer = new MediaPlayer(new Media(ClassLoader.getSystemResource("Sounds/goblin die.mp3").toString()));
-		MediaPlayer swordPlayer = new MediaPlayer(new Media(ClassLoader.getSystemResource("Sounds/sword.mp3").toString()));
-		MediaPlayer backSongs = new MediaPlayer(new Media(ClassLoader.getSystemResource("Sounds/soul of cinder.mp3").toString()));
-		backSongs.setVolume(0.1);
+		scoreBoard = new ScoreBoard();
+		scoreBoard.setLayoutX(350);
+		scoreBoard.setLayoutY(20);
+		scoreBoard.setScaleX(5);
+		scoreBoard.setScaleY(5);
 		//set scene
 		root.getChildren().add(floor.getGameImage());
 		root.getChildren().add(hero.getGameImage());
@@ -82,32 +111,31 @@ public class TestMain extends Application{
 		root.getChildren().add(healthBar.getHealth1());
 		root.getChildren().add(healthBar.getHealth2());
 		root.getChildren().add(healthBar.getHealth3());
+		root.getChildren().add(scoreBoard);
 		death.setVisible(false);
-        Scene scene = new Scene(root,1366,768);
+        scene = new Scene(root,1366,768);
         scene.setFill(Color.AQUAMARINE);
         playStage.setTitle("TestScene");
-        playStage.setScene(scene);
-        //playStage.setScene(menuScene);
+        //playStage.setScene(scene);
+        playStage.setScene(menuScene);
         //set key
-        KeyHandle keyHandle = new KeyHandle();
+        keyHandle = new KeyHandle();
         //make monsters set
         new MonstersSet();
         //attack thread
         scene.addEventHandler(KeyEvent.KEY_PRESSED, (key) -> {
         	if(key.getCode() == KeyCode.D) {
+        		hero.setRight(true);
         		keyHandle.setMoveRightPressed(true);
         		keyHandle.setAlreadyNotMove(false);
             }
             if(key.getCode() == KeyCode.A) {
+            	hero.setRight(false);
             	keyHandle.setMoveLeftPressed(true);
             	keyHandle.setAlreadyNotMove(false);
             }
             if(key.getCode() == KeyCode.W) {
             	keyHandle.setJumpPressed(true);
-            	keyHandle.setAlreadyNotMove(false);
-            }
-            if(key.getCode() == KeyCode.S) {
-            	keyHandle.setMoveDownPressed(true);
             	keyHandle.setAlreadyNotMove(false);
             }
             if(key.getCode() == KeyCode.J) {
@@ -128,10 +156,6 @@ public class TestMain extends Application{
         		keyHandle.setJumpPressed(false);
         		keyHandle.setAlreadyJump(false);
             }
-        	if(key.getCode()==KeyCode.W) {
-        		keyHandle.setMoveDownPressed(false);
-        		keyHandle.setAlreadyMoveDown(false);
-            }
         	if(key.getCode() == KeyCode.J) {
             	keyHandle.setAttackPressed(false);
             	keyHandle.setAlreadyAttack(false);
@@ -140,15 +164,22 @@ public class TestMain extends Application{
         });
 		//show
         playStage.show();
-        WingedSpawner wingedSpawner= new WingedSpawner(4000,root,hero);
-        WingedSpawner mageSpawner= new WingedSpawner(10000,root,hero);
-        PlatformSpawner platSpawner = new PlatformSpawner(500,root,hero);
-        WalkerSpawner walkerSpawner = new WalkerSpawner(4000,root,hero);
-        //wing spawning
-        wingedSpawner.start();
-        mageSpawner.start();
-        platSpawner.start();
-        walkerSpawner.start();
+        startButton.setOnMouseClicked(e -> {
+			this.stageNumber = 1;
+			playStage.setScene(scene);
+			wingedSpawner = new SpawnerThread(4000,hero,100,600);
+	        mageSpawner = new SpawnerThread(10000,hero,100,600);
+	        walkerSpawner = new SpawnerThread(4000,hero,588,588);
+	        platSpawner = new SpawnerThread(1000,hero,100,600);
+	        Thread wingThread = new Thread(wingedSpawner);
+	        Thread mageThread = new Thread(mageSpawner);
+	        Thread walkerThread = new Thread(walkerSpawner);
+	        Thread platThread = new Thread(platSpawner);
+			wingThread.start();
+			mageThread.start();
+			walkerThread.start();
+			platThread.start();
+		});
         new AnimationTimer() {
             @Override public void handle(long currentNanoTime) {
             	if(stageNumber == 0) {
@@ -166,26 +197,22 @@ public class TestMain extends Application{
                     		keyHandle.setAlreadyNotMove(true);
                     	}
                     	if(keyHandle.isMoveLeftPressed() && !keyHandle.isAlreadyMoveLeft()) {
-                    		hero.setLeft();
                     		keyHandle.setAlreadyMoveLeft(true);
                     	}
                     	if(keyHandle.isMoveRightPressed() && !keyHandle.isAlreadyMoveRight()) {
-                    		hero.setRight();
                     		keyHandle.setAlreadyMoveRight(true);
                     	}
                     	if(keyHandle.isJumpPressed() && !keyHandle.isAlreadyJump()) {
                     		hero.jump();
                     		keyHandle.setAlreadyJump(true);
                     	}
-                    	if(keyHandle.isMoveDownPressed() && !keyHandle.isAlreadyMoveDown()) {
-                    		hero.down();
-                    		keyHandle.setAlreadyMoveDown(true);
-                    	}
                     	if(keyHandle.isAttackPressed() && !keyHandle.isAlreadyAttack()) {
                     		hero.setAttack();
                     		keyHandle.setAlreadyAttack(true);
                     	}
+                    	hero.updateImageStatus();
                     	hero.getGameImage().setVisible(DamagedThread.isVisible());
+                    	hero.moveLimit();
                     	hero.update();
                     	hero.updateHitBox();
                     	hero.getSword().update();
@@ -217,7 +244,7 @@ public class TestMain extends Application{
                     	}
                     	//plat spawning
                     	if(platSpawner.isSpawn()) {
-                    		Plat wg = new Plat(platSpawner.getSpawnPos(),platSpawner.isRightSide());
+                    		Plat wg = new Plat(platSpawner.getSpawnPos(),platSpawner.isRight());
                     		root.getChildren().add(wg.getGameImage());
                     		plats.add(wg);
                     		platSpawner.setSpawn(false);
@@ -238,6 +265,10 @@ public class TestMain extends Application{
                     				hero.takeDamage();
                     				fireBalls.remove(fireBall);
                     				root.getChildren().remove(fireBall.getGameImage());
+                    			}
+                    			if(fireBall.isCollide(hero.getSword()) && hero.isAttack() && !AttackThread.isWaited()) {
+                    				root.getChildren().remove(fireBall.getGameImage());
+                    				fireBalls.remove(fireBall);
                     			}
                     		}
                     	}
@@ -268,6 +299,7 @@ public class TestMain extends Application{
                         				monster.setLife(monster.getLife()-1);
                         			}
                         			if(monster.getLife() <= 0) {
+                        				scoreBoard.addScore(monster.getScore());
                         				root.getChildren().remove(monster.getGameImage());
                         				root.getChildren().remove(monster.getHitBox());
                         				MonstersSet.getMonsters().remove(monster);
@@ -275,14 +307,59 @@ public class TestMain extends Application{
                         		}
                     		}
                     	}
+                    	scoreBoard.update();
                     	}
                     	else{
                     		if(!isEnd) {
                     			backSongs.stop();
-                    			root.getChildren().add(death);
                         		death.setVisible(true);
                         		youDiePlayer.play();
                         		isEnd = true;
+                        		root.getChildren().add(death);
+                    		}else {
+                    			try {
+									Thread.sleep(10000);
+								} catch (InterruptedException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+                    			//root.getChildren().remove(0, root.getChildren().size());
+                    			MonstersSet.getMonsters().clear();
+                    			plats.clear();
+                    			fireBalls.clear();
+                    			CastThread.getWaitedFireBalls().clear();
+                        		stageNumber = 0;
+                    			playStage.setScene(menuScene);
+                    			isEnd = false;
+                    			//setup
+                    			root.getChildren().clear();
+                    			floor = new Floor();
+                    			hero = new Hero();
+                    			healthBar = new HealthBar(hero);
+                    			death = new GameImage(new Image(ClassLoader.getSystemResource("Images/you died 2.png").toString()));
+                    			death.updatePosition(new Vector2D(0,200));
+                    			scoreBoard = new ScoreBoard();
+                    			scoreBoard.setLayoutX(350);
+                    			scoreBoard.setLayoutY(20);
+                    			scoreBoard.setScaleX(5);
+                    			scoreBoard.setScaleY(5);
+                    			//set scene
+                    			root.getChildren().add(floor.getGameImage());
+                    			root.getChildren().add(hero.getGameImage());
+                    			root.getChildren().add(hero.getSword().getGameImage());
+                    			root.getChildren().add(hero.getHitBox());
+                    			root.getChildren().add(healthBar.getHealth1());
+                    			root.getChildren().add(healthBar.getHealth2());
+                    			root.getChildren().add(healthBar.getHealth3());
+                    			root.getChildren().add(scoreBoard);
+                    			death.setVisible(false);
+                    			//set media
+                    			youDiePlayer = new MediaPlayer(new Media(ClassLoader.getSystemResource("Sounds/you die.mp3").toString()));
+                    			killPlayer = new MediaPlayer(new Media(ClassLoader.getSystemResource("Sounds/goblin die.mp3").toString()));
+                    			swordPlayer = new MediaPlayer(new Media(ClassLoader.getSystemResource("Sounds/sword.mp3").toString()));
+                    			backSongs = new MediaPlayer(new Media(ClassLoader.getSystemResource("Sounds/soul of cinder.mp3").toString()));
+                    			keyHandle = new KeyHandle();
+                    			
                     		}
                     	}
             	}
@@ -294,4 +371,29 @@ public class TestMain extends Application{
 		// TODO Auto-generated method stub
 		launch(args);
 	}
+	public static boolean isEnd() {
+		return isEnd;
+	}
+	public static void setEnd(boolean isEnd) {
+		TestMain.isEnd = isEnd;
+	}
+	public int getStageNumber() {
+		return stageNumber;
+	}
+	public void setStageNumber(int stageNumber) {
+		this.stageNumber = stageNumber;
+	}
+	public Scene getScene() {
+		return scene;
+	}
+	public void setScene(Scene scene) {
+		this.scene = scene;
+	}
+	public Scene getMenuScene() {
+		return menuScene;
+	}
+	public void setMenuScene(Scene menuScene) {
+		this.menuScene = menuScene;
+	}
+	
 }

@@ -1,7 +1,5 @@
 package Logic;
 
-import javafx.scene.image.Image;
-
 public class DamagedThread implements Runnable{
 	
 	private Hero hero;

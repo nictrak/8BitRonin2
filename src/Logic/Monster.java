@@ -11,6 +11,7 @@ public abstract class Monster extends LifeForm{
 	private String rightSide;
 	private String leftSide;
 	private boolean isImageRight;
+	private int score;
 	
 	public Monster(Hero h) {
 		super(new Vector2D(500,500),new Vector2D(0,0),new Vector2D(60,90),new GameImage(new Image(ClassLoader.getSystemResource("Images/Hero1.png").toString())),1);
@@ -18,6 +19,7 @@ public abstract class Monster extends LifeForm{
 		this.getGameImage().updatePosition(this.getPosition());
 		this.hitBox = new GameImage(new Image(ClassLoader.getSystemResource("Images/HitBox.png").toString()));
 		this.hitBox.updatePosition(new Vector2D(-100,-100));
+		this.score = 1;
 	}
 	public Monster(Vector2D pos,Hero h) {
 		super(pos,new Vector2D(0,0),new Vector2D(60,90),new GameImage(new Image(ClassLoader.getSystemResource("Images/Hero1.png").toString())),1);
@@ -25,10 +27,12 @@ public abstract class Monster extends LifeForm{
 		this.getGameImage().updatePosition(this.getPosition());
 		this.hitBox = new GameImage(new Image(ClassLoader.getSystemResource("Images/HitBox.png").toString()));
 		this.hitBox.updatePosition(new Vector2D(-100,-100));
+		this.score = 1;
 	}
 	public Monster(Vector2D pos,Vector2D vel,Vector2D size,GameImage gameImage,int l,Hero h) {
 		super(pos,vel,size,gameImage,l);
 		target = h;
+		this.score = 1;
 	}
 	
 	public double findHero() {
@@ -102,6 +106,12 @@ public abstract class Monster extends LifeForm{
 	}
 	public void setLeftSide(String leftSide) {
 		this.leftSide = leftSide;
+	}
+	public int getScore() {
+		return score;
+	}
+	public void setScore(int score) {
+		this.score = score;
 	}
 	
 	
