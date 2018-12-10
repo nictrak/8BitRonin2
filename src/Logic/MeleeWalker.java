@@ -36,7 +36,7 @@ public class MeleeWalker extends Monster{
 	@Override
 	public Vector2D direct() {
 		double a = findHero();
-		Vector2D j = new Vector2D(Math.cos(a)*3,0);
+		Vector2D j = new Vector2D(Math.cos(a)*5,0);
 		if(j.getX() >= 0) this.isRight = true;
 		else this.isRight = false;
 		this.updateSide();

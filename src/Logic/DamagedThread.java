@@ -18,7 +18,6 @@ public class DamagedThread implements Runnable{
 	public void run() {
 		// TODO Auto-generated method stub
 		this.hero.setLife(this.hero.getLife() - 1);
-		this.hero.setImmune(true);
 		double count = this.immuneRate;
 		while(count > 0 ) {
 			try {

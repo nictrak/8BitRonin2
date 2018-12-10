@@ -1,6 +1,5 @@
 package Logic;
 
-import javafx.scene.image.Image;
 
 public class AttackThread implements Runnable{
 	

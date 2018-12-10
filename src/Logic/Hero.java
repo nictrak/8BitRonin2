@@ -124,29 +124,31 @@ public class Hero extends LifeForm {
 			this.jumpCount = this.jumpCount + 1;
 		}
 	}
+	///mini jump
+	public void minijump() {
+		if(this.feetStatus == FeetStatus.AIR) {
+			feetStatus = FeetStatus.AIR;
+			this.getVelocity().setY(0);
+			Vector2D jumpForce = new Vector2D(0,-10);
+			this.getPosition().add(jumpForce);
+			this.getVelocity().add(jumpForce);
+		}
+	}
 	///gravity update
 	public void gravityUpdate(Floor floor,ArrayList<Plat> platforms){
-		if(isCollide(floor) && feetStatus == FeetStatus.AIR ) {
-			this.getVelocity().setY(0);
-			this.getPosition().setY(floor.getPosition().getY() - this.getSize().getY() + 1);
-			this.updateImage();
-			feetStatus = FeetStatus.FLOOR;
-			this.updateImage();
-			this.jumpCount = 0;
-		}
 		boolean isOnPlat = false;
 		for(int i = 0 ; i < platforms.size() ; i++) {
 			Plat platform = platforms.get(i);
 			if(!platform.equals(null)) {
-				if(feetStatus == FeetStatus.AIR) {
-					if(isCollide(platform) && this.getPosition().getY()+this.getSize().getY()-30<platform.getPosition().getY()) {
-						this.getVelocity().setY(0);
-						this.getPosition().setY(platform.getPosition().getY() - this.getSize().getY() + 1);
-						feetStatus = FeetStatus.PLATFORM;
-						isOnPlat = true;
-						this.jumpCount = 0;
+					if(isCollide(platform)) {
+						if(this.getPosition().getY()+this.getSize().getY()-30<platform.getPosition().getY()) {
+							this.getVelocity().setY(0);
+							this.getPosition().setY(platform.getPosition().getY() - this.getSize().getY() + 7);
+							feetStatus = FeetStatus.PLATFORM;
+							this.jumpCount = 0;
+							isOnPlat = true;
+						}
 					}
-				}
 				if(feetStatus == FeetStatus.PLATFORM) {
 					if(isCollide(platform) && this.getPosition().getY()+this.getSize().getY()-30<platform.getPosition().getY()) {
 						this.getPosition().add(platform.getVelocity());
@@ -156,6 +158,14 @@ public class Hero extends LifeForm {
 		}
 		if(!isOnPlat && !isCollide(floor)) {
 			feetStatus = FeetStatus.AIR;
+		}
+		if(isCollide(floor)) {
+			this.getVelocity().setY(0);
+			this.getPosition().setY(floor.getPosition().getY() - this.getSize().getY() + 7);
+			this.updateImage();
+			feetStatus = FeetStatus.FLOOR;
+			this.updateImage();
+			this.jumpCount = 0;
 		}
 		if(feetStatus == FeetStatus.AIR) {
 			Vector2D gravityForce = new Vector2D(0,1.5);
