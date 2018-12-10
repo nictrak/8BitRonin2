@@ -105,13 +105,13 @@ public class Main extends Application{
 		healthBar = new HealthBar(hero);
 		death = new GameImage(new Image(ClassLoader.getSystemResource("Images/you died 2.png").toString()));
 		death.updatePosition(new Vector2D(0,200));
-		scoreBoard = new ScoreBoard();
+		scoreBoard = new ScoreBoard(0);
 		scoreBoard.setLayoutX(450);
 		scoreBoard.setLayoutY(20);
 		scoreBoard.setScaleX(3);
 		scoreBoard.setScaleY(3);
 		hScore = new Label();
-		hScore.setText("HighScore : " + Integer.toString(scoreBoard.getHighScoreController().getHighScore()));
+		hScore.setText("HighScore : " + Integer.toString(scoreBoard.getHighScore()));
 		hScore.setTextFill(Color.WHITE);
 		hScore.setLayoutX(1160);
 		hScore.setLayoutY(20);
@@ -312,8 +312,6 @@ public class Main extends Application{
                         		if(hero.getHitBox() != null) {
                         			if(monster.getHitBox() != null) {
                         				if(monster.isCollide(hero.getHitBox())) {
-                        					killPlayer.play();
-                                    		killPlayer.seek(Duration.ZERO);
                                 			hero.takeDamage();
                                 			hero.setImmune(true);
                                 		}
@@ -323,6 +321,8 @@ public class Main extends Application{
                         			if(monster.isCollide(hero.getSword())) {
                         				//monster.getGameImage().setVisible(false);
                         				//monster.getHitBox().setVisible(false);
+                        				killPlayer.play();
+                                		killPlayer.seek(Duration.ZERO);
                         				monster.setLife(monster.getLife()-1);
                         				hero.minijump();
                         			}
@@ -339,7 +339,7 @@ public class Main extends Application{
                     	}
                     	else{
                     		if(!isEnd) {
-                    			scoreBoard.getHighScoreController().writeScore(scoreBoard.getScore());
+                    			scoreBoard.writeHighScore(scoreBoard.getScore());
                     			backSongs.stop();
                         		death.setVisible(true);
                         		youDiePlayer.play();
@@ -367,7 +367,8 @@ public class Main extends Application{
                     			healthBar = new HealthBar(hero);
                     			death = new GameImage(new Image(ClassLoader.getSystemResource("Images/you died 2.png").toString()));
                     			death.updatePosition(new Vector2D(0,200));
-                    			scoreBoard = new ScoreBoard();
+                    			int high = scoreBoard.getHighScore();
+                    			scoreBoard = new ScoreBoard(high);
                     			scoreBoard.setLayoutX(450);
                     			scoreBoard.setLayoutY(20);
                     			scoreBoard.setScaleX(3);
@@ -391,7 +392,7 @@ public class Main extends Application{
                     			backSongs.setVolume(0.1);
                     			keyHandle = new KeyHandle();
                     			menu.getChildren().remove(hScore);
-                    			hScore.setText("HighScore : " + Integer.toString(scoreBoard.getHighScoreController().getHighScore()));
+                    			hScore.setText("HighScore : " + Integer.toString(scoreBoard.getHighScore()));
                     			hScore.setTextFill(Color.WHITE);
                     			hScore.setLayoutX(1160);
                     			hScore.setLayoutY(20);

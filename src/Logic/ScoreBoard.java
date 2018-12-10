@@ -6,16 +6,22 @@ import javafx.scene.paint.Color;
 public class ScoreBoard extends Label{
 	
 	private int score;
-	private HighScoreController highScoreController;
+	private int highScore;
 	
-	public ScoreBoard() {
+	public ScoreBoard(int highScore) {
 		this.score = 0;
-		this.highScoreController = new HighScoreController();
+		this.highScore = highScore;
 		this.setTextFill(Color.WHITE);
 	}
 	
 	public void update() {
-		this.setText("Score : " + Integer.toString(score) + "  HighScore : " + Integer.toString(highScoreController.getHighScore()));
+		this.setText("Score : " + Integer.toString(score) + "  HighScore : " + Integer.toString(highScore));
+	}
+	
+	public void writeHighScore(int newScore) {
+		if(newScore > this.highScore) {
+			this.highScore = newScore;
+		}
 	}
 	
 	public void addScore(int adder) {
@@ -30,12 +36,14 @@ public class ScoreBoard extends Label{
 		this.score = score;
 	}
 
-	public HighScoreController getHighScoreController() {
-		return highScoreController;
+	public int getHighScore() {
+		return highScore;
 	}
 
-	public void setHighScoreController(HighScoreController highScoreController) {
-		this.highScoreController = highScoreController;
+	public void setHighScore(int highScore) {
+		this.highScore = highScore;
 	}
+
+	
 	
 }
