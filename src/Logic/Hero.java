@@ -115,7 +115,7 @@ public class Hero extends LifeForm {
 	}
 	///Jump
 	public void jump() {
-		if(this.jumpCount <= this.jumpLimit) {
+		if(this.jumpCount < this.jumpLimit) {
 			feetStatus = FeetStatus.AIR;
 			this.getVelocity().setY(0);
 			Vector2D jumpForce = new Vector2D(0,-20);

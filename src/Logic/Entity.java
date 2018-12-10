@@ -16,13 +16,7 @@ public class Entity {
 		this.size = size;
 		this.gameImage = gameImage;
 	}
-	
-	public Entity() {
-		position = new Vector2D(0,0);
-		velocity = new Vector2D(0,0);
-		size = new Vector2D(100,100);
-	}
-	
+
 	public void updateImage() {
 		this.gameImage.updatePosition(position);
 	}

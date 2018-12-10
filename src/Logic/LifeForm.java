@@ -8,19 +8,15 @@ public class LifeForm extends Entity{
 	private boolean isDeath;
 	protected boolean isRight;
 	
-	public LifeForm() {
-		super();
-		life = 1;
-	}
-	
-	public LifeForm(Vector2D pos,Vector2D vel,Vector2D size,GameImage gameImage,int l) {
+	public LifeForm(Vector2D pos,Vector2D vel,Vector2D size,GameImage gameImage,int life) {
 		super(pos,vel,size,gameImage);
-		if(l < 0) l = 1 ; 
+		if(life < 0) life = 1 ; 
 		isDeath = false;
-		life = l;
+		isRight = false;
+		this.life = life;
 	}
 	
-	public void takeDamage(int l) {
+	public void takeDamage() {
 		life = life - 1;
 	}
 	
@@ -52,7 +48,5 @@ public class LifeForm extends Entity{
 	public void setRight(boolean isRight) {
 		this.isRight = isRight;
 	}
-	
-	
 	
 }
