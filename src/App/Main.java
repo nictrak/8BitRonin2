@@ -89,6 +89,7 @@ public class Main extends Application{
 		//
 		ArrayList<Plat> plats = new ArrayList<Plat>();
 		ArrayList<FireBall> fireBalls = new ArrayList<FireBall>();
+		ArrayList<Monster> monsters = new ArrayList<Monster>();
 		new CastThread(null).setup();
 		isEnd = false;
 		//media setup
@@ -247,7 +248,7 @@ public class Main extends Application{
                     		WingedGoblin wg = new WingedGoblin(wingedSpawner.getSpawnPos(),hero);
                     		root.getChildren().add(wg.getGameImage());
                     		root.getChildren().add(wg.getHitBox());
-                    		MonstersSet.getMonsters().add(wg);
+                    		monsters.add(wg);
                     		wingedSpawner.setSpawn(false);
                     	}
                     	//mage spawning
@@ -255,7 +256,7 @@ public class Main extends Application{
                     		Mage wg = new Mage(mageSpawner.getSpawnPos(),hero);
                     		root.getChildren().add(wg.getGameImage());
                     		root.getChildren().add(wg.getHitBox());
-                    		MonstersSet.getMonsters().add(wg);
+                    		monsters.add(wg);
                     		mageSpawner.setSpawn(false);
                     	}
                     	//walker spawning
@@ -263,7 +264,7 @@ public class Main extends Application{
                     		MeleeWalker wg = new MeleeWalker(walkerSpawner.getSpawnPos(),hero);
                     		root.getChildren().add(wg.getGameImage());
                     		root.getChildren().add(wg.getHitBox());
-                    		MonstersSet.getMonsters().add(wg);
+                    		monsters.add(wg);
                     		walkerSpawner.setSpawn(false);
                     	}
                     	//plat spawning
@@ -304,8 +305,8 @@ public class Main extends Application{
                     		Plat platform = plats.get(i);
                     		if(platform != null) platform.update();
                     	}
-                    	for(int i = 0 ; i < MonstersSet.getMonsters().size(); i++ ) {
-                    		Monster monster = MonstersSet.getMonsters().get(i);
+                    	for(int i = 0 ; i < monsters.size(); i++ ) {
+                    		Monster monster = monsters.get(i);
                     		if(monster != null) {
                     			monster.direct();
                         		monster.update();
@@ -330,7 +331,7 @@ public class Main extends Application{
                         				scoreBoard.addScore(monster.getScore());
                         				root.getChildren().remove(monster.getGameImage());
                         				root.getChildren().remove(monster.getHitBox());
-                        				MonstersSet.getMonsters().remove(monster);
+                        				monsters.remove(monster);
                         			}
                         		}
                     		}
@@ -353,7 +354,7 @@ public class Main extends Application{
 									e.printStackTrace();
 								}
                     			//root.getChildren().remove(0, root.getChildren().size());
-                    			MonstersSet.getMonsters().clear();
+                    			monsters.clear();
                     			plats.clear();
                     			fireBalls.clear();
                     			CastThread.getWaitedFireBalls().clear();

@@ -16,7 +16,7 @@ public class AttackThread implements Runnable{
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		while(true) {
+		while(hero.getLife() > 0) {
 			waited = false;
 			try {
 				Thread.sleep(1);

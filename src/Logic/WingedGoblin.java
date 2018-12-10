@@ -5,17 +5,6 @@ import javafx.scene.image.Image;
 
 public class WingedGoblin extends Monster{
 	
-	public WingedGoblin(Hero h) {
-		super(h);
-		this.setLeftSide("Images/melee wing left.gif");
-		this.setRightSide("Images/melee wing right.gif");
-		this.setGameImage(new GameImage(new Image(ClassLoader.getSystemResource(this.getLeftSide()).toString())));
-		this.updateImage();
-		this.getHitBox().updatePosition(this.getPosition().sum(new Vector2D(50,0)));
-		this.getHitBox().setFitWidth(60);
-		this.getHitBox().setFitHeight(70);
-		this.getHitBox().setVisible(false);
-	}
 	public WingedGoblin(Vector2D pos,Hero h) {
 		super(pos,h);
 		this.setLeftSide("Images/melee wing left.gif");
