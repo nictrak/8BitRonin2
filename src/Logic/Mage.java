@@ -25,7 +25,7 @@ public class Mage extends Monster{
 	
 	public Vector2D getCastDirection() {
 		double angle = findHero();
-		Vector2D direction = new Vector2D(Math.cos(angle)*2.5,Math.sin(angle)*2.5);
+		Vector2D direction = new Vector2D(Math.cos(angle)*5,Math.sin(angle)*5);
 		return direction;
 	}
 

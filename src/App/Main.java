@@ -307,18 +307,11 @@ public class Main extends Application{
                     		if(platform != null) platform.update();
                     	}
                     	for(int i = 0 ; i < monsters.size(); i++ ) {
+                    		boolean checkDamage = true;
                     		Monster monster = monsters.get(i);
                     		if(monster != null) {
                     			monster.direct();
                         		monster.update();
-                        		if(hero.getHitBox() != null) {
-                        			if(monster.getHitBox() != null) {
-                        				if(monster.isCollide(hero.getHitBox())) {
-                                			hero.takeDamage();
-                                			hero.setImmune(true);
-                                		}
-                        			}
-                        		}
                         		if(hero.isAttack() && !AttackThread.isWaited()) {
                         			if(monster.isCollide(hero.getSword())) {
                         				//monster.getGameImage().setVisible(false);
@@ -333,6 +326,15 @@ public class Main extends Application{
                         				root.getChildren().remove(monster.getGameImage());
                         				root.getChildren().remove(monster.getHitBox());
                         				monsters.remove(monster);
+                        				checkDamage = false;
+                        			}
+                        		}
+                        		if(hero.getHitBox() != null && checkDamage) {
+                        			if(monster.getHitBox() != null ) {
+                        				if(monster.isCollide(hero.getHitBox())) {
+                                			hero.takeDamage();
+                                			hero.setImmune(true);
+                                		}
                         			}
                         		}
                     		}
