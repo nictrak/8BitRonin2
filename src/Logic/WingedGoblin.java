@@ -20,7 +20,7 @@ public class WingedGoblin extends Monster{
 	@Override
 	public Vector2D direct() {
 		double a = findHero();
-		Vector2D j = new Vector2D(Math.cos(a)*2,Math.sin(a)*2);
+		Vector2D j = new Vector2D(Math.cos(a)*5,Math.sin(a)*5);
 		this.getPosition().add(j);
 		if(j.getX() >= 0) this.isRight = true;
 		else this.isRight = false;

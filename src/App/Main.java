@@ -187,7 +187,7 @@ public class Main extends Application{
         startButton.setOnMouseClicked(e -> {
 			this.stageNumber = 1;
 			playStage.setScene(scene);
-			wingedSpawner = new SpawnerThread(3000,hero,100,600);
+			wingedSpawner = new SpawnerThread(1500,hero,100,600);
 	        mageSpawner = new SpawnerThread(6000,hero,100,600);
 	        walkerSpawner = new SpawnerThread(2000,hero,588,588);
 	        platSpawner = new SpawnerThread(1000,hero,100,600);
@@ -291,10 +291,11 @@ public class Main extends Application{
                     				fireBalls.remove(fireBall);
                     				root.getChildren().remove(fireBall.getGameImage());
                     			}
-                    			if(fireBall.isCollide(hero.getSword()) && hero.isAttack() && !AttackThread.isWaited()) {
+                    			//for destroy fireball by sword
+                    			/*if(fireBall.isCollide(hero.getSword()) && hero.isAttack() && !AttackThread.isWaited()) {
                     				root.getChildren().remove(fireBall.getGameImage());
                     				fireBalls.remove(fireBall);
-                    			}
+                    			}*/
                     		}
                     	}
                     	if(hero.isAttack() && !AttackThread.isWaited()) {
