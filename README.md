@@ -1,1 +1,1 @@
-# Goblin Soul
+# Goblin Souls
